@@ -4,28 +4,33 @@ import "strconv"
 
 type PokemonType string
 
+type PokemonTypes []PokemonType
+
 type Pokemon struct {
 	Name   string
 	Height int
 	Weight int
-	Types  []PokemonType
+	Types  PokemonTypes
 }
 
 func (p *Pokemon) String() string {
-	// json string
+	return `{"name":"` + p.Name + `","height":` + strconv.Itoa(p.Height) + `,"weight":` + strconv.Itoa(p.Weight) + `,"types":` + p.Types.String() + `}`
+}
+
+func (t *PokemonType) String() string {
+	return string(*t)
+}
+
+func (ts *PokemonTypes) String() string {
 	types := ""
-	for i, t := range p.Types {
+	for i, t := range *ts {
 		if i == 0 {
 			types += `"` + t.String() + `"`
 		} else {
 			types += `,"` + t.String() + `"`
 		}
 	}
-	return `{"name":"` + p.Name + `","height":` + strconv.Itoa(p.Height) + `,"weight":` + strconv.Itoa(p.Weight) + `,"types":[` + types + `]}`
-}
-
-func (t *PokemonType) String() string {
-	return string(*t)
+	return `[` + types + `]`
 }
 
 func toPokemonTypes(types []string) (pokemonTypes []PokemonType) {

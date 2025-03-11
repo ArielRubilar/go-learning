@@ -18,7 +18,7 @@ func main() {
 
 	service := application.NewPokemonService(repository)
 
-	pokemon, err := service.GetPokemon("pikachu")
+	pokemon, err := service.GetPokemon("bulbasaur")
 
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
