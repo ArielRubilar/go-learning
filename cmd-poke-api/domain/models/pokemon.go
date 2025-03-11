@@ -1,12 +1,14 @@
 package model
 
-type Type = string
+import "strconv"
+
+type PokemonType string
 
 type Pokemon struct {
-	Name   string `json:"name"`
-	Height int    `json:"height"`
-	Weight int    `json:"weight"`
-	Types  []Type `json:"types"`
+	Name   string
+	Height int
+	Weight int
+	Types  []PokemonType
 }
 
 func (p *Pokemon) String() string {
@@ -14,11 +16,31 @@ func (p *Pokemon) String() string {
 	types := ""
 	for i, t := range p.Types {
 		if i == 0 {
-			types += `"` + t + `"`
+			types += `"` + t.String() + `"`
 		} else {
-			types += `,"` + t + `"`
+			types += `,"` + t.String() + `"`
 		}
 	}
+	return `{"name":"` + p.Name + `","height":` + strconv.Itoa(p.Height) + `,"weight":` + strconv.Itoa(p.Weight) + `,"types":[` + types + `]}`
+}
 
-	return `{"name":"` + p.Name + `","height":` + string(p.Height) + `,"weight":` + string(p.Weight) + `,"types":` + types + `}`
+func (t *PokemonType) String() string {
+	return string(*t)
+}
+
+func convertTypes(types []string) []PokemonType {
+	pokemonTypes := make([]PokemonType, len(types))
+	for i, t := range types {
+		pokemonTypes[i] = PokemonType(t)
+	}
+	return pokemonTypes
+}
+
+func NewPokemon(name string, height int, weight int, types []string) *Pokemon {
+	return &Pokemon{
+		Name:   name,
+		Height: height,
+		Weight: weight,
+		Types:  convertTypes(types),
+	}
 }
