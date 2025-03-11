@@ -28,10 +28,9 @@ func (t *PokemonType) String() string {
 	return string(*t)
 }
 
-func convertTypes(types []string) []PokemonType {
-	pokemonTypes := make([]PokemonType, len(types))
-	for i, t := range types {
-		pokemonTypes[i] = PokemonType(t)
+func toPokemonTypes(types []string) (pokemonTypes []PokemonType) {
+	for _, t := range types {
+		pokemonTypes = append(pokemonTypes, PokemonType(t))
 	}
 	return pokemonTypes
 }
@@ -41,6 +40,6 @@ func NewPokemon(name string, height int, weight int, types []string) *Pokemon {
 		Name:   name,
 		Height: height,
 		Weight: weight,
-		Types:  convertTypes(types),
+		Types:  toPokemonTypes(types),
 	}
 }
