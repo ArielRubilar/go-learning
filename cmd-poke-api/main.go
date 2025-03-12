@@ -17,25 +17,16 @@ func main() {
 
 	repository := api.NewPokemonApi()
 
-	service := application.NewPokemonService(repository)
+	store := store.NewCvsStore()
 
-	pokemon, err := service.GetPokemon("pikachu")
+	service := application.NewPokemonService(repository, store)
+
+	pokemon, err := service.GetByName("pikachu")
 
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 	}
 
-	store := store.NewCvsStore()
-
-	data := make(map[string]string)
-
-	data["Name"] = pokemon.Name
-	data["Height"] = fmt.Sprintf("%d", pokemon.Height)
-	data["Weight"] = fmt.Sprintf("%d", pokemon.Weight)
-	data["Types"] = pokemon.Types.String()
-
-	_ = store.Save("data/pokemon-"+pokemon.Name, []map[string]string{data})
-
-	fmt.Printf("Pokemon: %s\n", pokemon.String())
+	err = service.SavePokemon(pokemon)
 
 }
