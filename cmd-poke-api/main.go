@@ -27,6 +27,6 @@ func main() {
 		fmt.Printf("Error: %s\n", err)
 	}
 
-	err = service.SavePokemon(pokemon)
+	service.SavePokemon(pokemon)
 
 }
