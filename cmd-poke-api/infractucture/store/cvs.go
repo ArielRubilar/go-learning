@@ -2,6 +2,7 @@ package store
 
 import (
 	"os"
+	"strings"
 
 	repository "github.com/ArielRubilar/go-learning/domain/repositories"
 )
@@ -13,30 +14,52 @@ func NewCvsStore() repository.Store {
 	return &CvsStore{}
 }
 
+func toCsv(data []string) string {
+	csv := ""
+
+	for index, d := range data {
+		csv += d
+		if index < len(data)-1 {
+			csv += ","
+		}
+	}
+
+	return csv
+}
+
+func createDir(key string) {
+	folders := strings.Split(key, "/")
+
+	if len(folders) > 1 {
+		fullDirPath := strings.Join(folders[:len(folders)-1], "/")
+		os.MkdirAll(fullDirPath, os.ModePerm)
+	}
+}
+
 func (s *CvsStore) Save(key string, data []map[string]string) error {
 
-	os.Mkdir("data", 0777)
+	createDir(key)
 
-	file, err := os.Create("data/" + key + ".csv")
+	file, err := os.Create(key + ".csv")
 
 	if data[0] == nil {
 		return nil
 	}
 
-	header := ""
+	headers := []string{}
 
 	for h := range data[0] {
-		header += h + ","
+		headers = append(headers, h)
 	}
 
-	file.WriteString(header + "\n")
+	file.WriteString(toCsv(headers) + "\n")
 
 	for _, row := range data {
-		values := ""
-		for _, value := range row {
-			values += value + ","
+		values := []string{}
+		for _, head := range headers {
+			values = append(values, row[head])
 		}
-		file.WriteString(values + "\n")
+		file.WriteString(toCsv(values) + "\n")
 	}
 
 	if err != nil {

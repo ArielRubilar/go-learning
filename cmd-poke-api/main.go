@@ -19,7 +19,7 @@ func main() {
 
 	service := application.NewPokemonService(repository)
 
-	pokemon, err := service.GetPokemon("bulbasaur")
+	pokemon, err := service.GetPokemon("pikachu")
 
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
@@ -34,7 +34,7 @@ func main() {
 	data["Weight"] = fmt.Sprintf("%d", pokemon.Weight)
 	data["Types"] = pokemon.Types.String()
 
-	_ = store.Save("pokemon", []map[string]string{data})
+	_ = store.Save("data/pokemon-"+pokemon.Name, []map[string]string{data})
 
 	fmt.Printf("Pokemon: %s\n", pokemon.String())
 
